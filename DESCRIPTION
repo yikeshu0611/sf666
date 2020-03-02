@@ -1,0 +1,26 @@
+Package: sf666
+Title: Simple Featrue Affine Transformations
+Version: 1.0
+Authors@R: 
+    c(
+    person("Jing","Zhang",role = c("aut", "cre"),email = "zj391120@163.com"),
+    person("Zhi", "Jin", role="aut")
+    )
+Description: Rich affine transformations for Simple feature in two dimensions 
+    map can bring us amazing surprise. Translation, rotation, mirror reflection, 
+    zoom, projection and truncation can be easy carried out by using this package 
+    for two-dimension simple feature.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 6.1.1
+Suggests: 
+    ggplot2,
+    ggnewscale
+Imports: 
+    sf,
+    tmcn
+URL: https://github.com/yikeshu0611/sf666
+BugReports: https://github.com/yikeshu0611/sf666/issues
