@@ -20,7 +20,6 @@ Center of sf
 }
 \examples{
 library(sf666)
-sf_center(mapdata)
-sf_center(mapdata,1)
-sf_center(mapdata,2)
+tri=triangle()
+sf_center(tri)
 }

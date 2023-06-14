@@ -44,26 +44,26 @@
 #' # if you want to put them together, list them
 #' sf_point(list(mt1,mt2),c(4,9),mt1)
 sf_point<-function(...,colname='point',rownames, crs = NA_crs_){
-    matrix<-list(...)
+    matr<-list(...)
     # process one list to be one matrix
-    if (any(sapply(matrix, class)=='list')){
-        for (i in 1:length(matrix)) {
-            if (class(matrix[[i]])=='list'){
-                mt_list =  matrix[[i]]
+    if (any(sapply(matr, class)=='list')){
+        for (i in 1:length(matr)) {
+            if (is.list(matr[[i]])){
+                mt_list =  matr[[i]]
                 if (length(mt_list)==1){
-                    matrix[[i]]=mt_list[[1]]
+                    matr[[i]]=mt_list[[1]]
                 }else{
                     for (j in 1:length(mt_list)) {
                         if (j==1) mt_rbind=NULL
                         mt_rbind=rbind(mt_rbind,mt_list[[j]])
                     }
-                    matrix[[i]]=mt_rbind
+                    matr[[i]]=mt_rbind
                 }
             }
         }
     }
     mti<-function(matrix,colname=colname,rownames=rownames){
-        if (class(matrix)=='numeric'){
+        if ('numeric' %in% class(matrix)){
             if (length(matrix)==2){
                 sfi=st_sfc(st_point(matrix),crs = crs)
                 text=paste0('st_sf(',colname,'=sfi,row.names = rownames)')
@@ -91,9 +91,9 @@ sf_point<-function(...,colname='point',rownames, crs = NA_crs_){
             if (!chinese()) stop('The input of sf_point() must be 1 or more two-column matrix or a two-number vector.')
         }
     }
-    for (i in 1:length(matrix)) {
+    for (i in 1:length(matr)) {
         if (i==1) res=NULL
-        res=rbind(res,mti(matrix=matrix[[i]],colname=colname,rownames=rownames))
+        res=rbind(res,mti(matrix=matr[[i]],colname=colname,rownames=rownames))
     }
     return(res)
 }

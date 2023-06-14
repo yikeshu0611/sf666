@@ -1,5 +1,5 @@
 Package: sf666
-Title: Simple Featrue Affine Transformations
+Title: Simple Feature Affine Transformations
 Version: 1.0
 Authors@R: 
     c(
@@ -14,13 +14,19 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 2.10)
-RoxygenNote: 6.1.1
-Suggests: 
+    R (>= 2.10),
+    ggnewscale,
     ggplot2,
-    ggnewscale
+    ggrepel
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
 Imports: 
+    rvest,
     sf,
-    tmcn
+    tmcn,
+    do
 URL: https://github.com/yikeshu0611/sf666
 BugReports: https://github.com/yikeshu0611/sf666/issues

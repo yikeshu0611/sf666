@@ -9,9 +9,8 @@
 #'
 #' @examples
 #' library(sf666)
-#' sf_center(mapdata)
-#' sf_center(mapdata,1)
-#' sf_center(mapdata,2)
+#' tri=triangle()
+#' sf_center(tri)
 sf_center <- function(sf,level=c("1","2")){
     if (!is.character(level)) level=as.character(level)
     level=match.arg(level)

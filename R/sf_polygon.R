@@ -47,16 +47,30 @@ sf_polygon <- function(...,colname='polygon',row.names,crs=NA_agr_){
     dd<-list(...)
     for (i in 1:length(dd)) {
         if (i==1) res=NULL
-        ddi=dd[[i]]
-        if (class(ddi)=='matrix'){
+        (ddi=dd[[i]])
+        if (is.matrix(ddi)){
+            if (any(ddi[1,]!=ddi[nrow(ddi),])){
+                ddi=rbind(ddi,ddi[1,])
+                if (chinese()) warning(paste0(tmcn::toUTF8('\u7B2C'),i,tmcn::toUTF8('\u4E2A\u77E9\u9635\u7684\u7B2C1\u884C\u548C\u6700\u540E\u4E00\u884C\u4E0D\u76F8\u7B49,\u610F\u5473\u7740\u4E0D\u662F\u5C01\u95ED\u56FE\u5F62,\u6211\u4EEC\u5C06\u7B2C1\u884C\u52A0\u5728\u6700\u540E\u4E00\u884C\u540E\u9762,\u6784\u6210\u4E00\u4E2A\u5C01\u95ED\u7684\u56FE\u5F62,\u5982\u679C\u4E0D\u662F\u8BF7\u81EA\u884C\u4FEE\u6539\u539F\u6570\u636E')))
+                if (!chinese()) warning(paste0('In No.',i,'matirx, the first row is not equal to the last row. The first row is add to the end of matrix to construct a closed map. If not, please change the original matrix by yourself'))
+            }
             sfcres=paste0('st_sf(',colname,'=st_sfc(st_polygon(list(ddi))),row.names=row.names,crs=crs)')
             res=rbind(res,eval(parse(text = sfcres)))
-        }else if (class(ddi)=='list'){
-            if (all(sapply(ddi, class)=='matrix')){
+        }else if (is.list(ddi)){
+            if (all(sapply(ddi, is.matrix))){
                 # a list contain of many matrix
+                for (j in 1:length(ddi)){
+                    ddj=ddi[[j]]
+                    if (any(ddj[1,]!=ddj[nrow(ddi),])){
+                        ddj=rbind(ddj,ddj[1,])
+                        ddi[[j]]=ddj
+                        if (chinese()) warning(paste0(tmcn::toUTF8('\u7B2C'),i,tmcn::toUTF8('\u4E2A\u77E9\u9635\u7684\u7B2C1\u884C\u548C\u6700\u540E\u4E00\u884C\u4E0D\u76F8\u7B49,\u610F\u5473\u7740\u4E0D\u662F\u5C01\u95ED\u56FE\u5F62,\u6211\u4EEC\u5C06\u7B2C1\u884C\u52A0\u5728\u6700\u540E\u4E00\u884C\u540E\u9762,\u6784\u6210\u4E00\u4E2A\u5C01\u95ED\u7684\u56FE\u5F62,\u5982\u679C\u4E0D\u662F\u8BF7\u81EA\u884C\u4FEE\u6539\u539F\u6570\u636E')))
+                        if (!chinese()) warning(paste0('In No.',i,'matirx, the first row is not equal to the last row. The first row is add to the end of matrix to construct a closed map. If not, please change the original matrix by yourself'))
+                    }
+                }
                 sfcres=paste0('st_sf(',colname,'=st_sfc(st_polygon(ddi)),row.names=row.names,crs=crs)')
                 res=rbind(res,eval(parse(text = sfcres)))
-            }else if (all(sapply(ddi, class)=='list')){
+            }else if (all(sapply(ddi, is.list))){
                 sfcres=paste0('st_sf(',colname,'=st_sfc(st_multipolygon(ddi)),row.names=row.names,crs=crs)')
                 res=rbind(res,eval(parse(text = sfcres)))
             }

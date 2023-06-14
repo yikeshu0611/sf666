@@ -51,9 +51,9 @@
 #' mt3=rbind(c(8,7),c(13,15))
 #' sf_line(list(mt1,mt2),c(4,9),mt3)
 sf_line<-function(...,colname='geometry',rownames, crs = NA_crs_){
-    matrix=list(...)
+    matr<-list(...)
     mti<-function(matrix,colname=colname,rownames=rownames){
-        if (class(matrix)=='numeric'){
+        if ('numeric' %in% class(matrix)){
             if (length(matrix)==2){
                 #if you give one line, we line c(0,0) and it
                 sfi=st_sfc(st_linestring(rbind(c(0,0),matrix)),crs = crs)
@@ -80,10 +80,13 @@ sf_line<-function(...,colname='geometry',rownames, crs = NA_crs_){
         }else if(is.list(matrix)){
             #check whether two-numeric vector exist in the list
             #if exist, rbind c(0,0) and it
-            for (i in 1:length(matrix)) {
-                if (class(matrix[[i]])=='numeric'){
-                    if (length(matrix[[i]])==2){
-                        matrix[[i]]=rbind(c(0,0),matrix[[i]])
+            for (j in 1:length(matrix)) {
+                if ('numeric' %in% class(matrix[[j]])){
+                    if (length(matrix[[j]])==2){
+                        matrix[[j]]=rbind(c(0,0),matrix[[j]])
+                    }else{
+                        if (chinese()) stop(tmcn::toUTF8('\u4E00\u70B9\u53EA\u80FD\u67092\u4E2A\u5750\u6807'))
+                        if (chinese()) stop('Each point must be with two numbers')
                     }
                 }
             }
@@ -96,9 +99,9 @@ sf_line<-function(...,colname='geometry',rownames, crs = NA_crs_){
             if (!chinese()) stop('The input of sf_line() must be 1 or more two-column matrix or a two-number vector.')
         }
     }
-    for (i in 1:length(matrix)) {
+    for (i in 1:length(matr)) {
         if (i==1) res=NULL
-        res=rbind(res,mti(matrix=matrix[[i]],colname=colname,rownames=rownames))
+        res=rbind(res,mti(matrix=matr[[i]],colname=colname,rownames=rownames))
     }
     return(res)
 }

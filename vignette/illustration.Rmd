@@ -1,0 +1,158 @@
+---
+title: "sf666: an R pakcage for simple feature affine transformations"
+author: "Jing Zhang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sf666: an R pakcage for simple feature affine transformations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+sf666 package is an implement for simple feature manipulation in R. This package mainly provides three aspects functions. They are:
+
+- create simple feature object
+- add elements to simple feature map
+- simple affine transformations
+
+## 1. create simple feature object
+
+**Only `sf` type is provided.** Unlike package `sf`, in which you can create `sfg`, `sfc`, `sf` types of simple feature, `sf666` only gives `sf` object. Because, I think there is no need for ordinary users to know much about the detailed information of simple feature types. With the aim to plot a picture, `sf` can be OK.  
+
+**Only three functions is provided.** In package `sf`, you need to know, very important, one point is different from two points, one line is different from two line, which is the same to polyon. Even, you need to remember numeric vectors and matrix. It is important for exports. I agree. However, for ordinary users, the purpose for them is to create point(s), line(s) or polygon(s).
+
+**dataframe is allowed.** dataframe will be transformed to matrix.
+
+### 1.1 create points
+
+Based on package `sf`, we packaged `st_point`, `st_multipoint` to new function `sf_point`. The **INPUT** of `sf_point` can be two-numeric vectors or two-column matrix for  points. the **OUTPUT** is only `sf` object.
+
+**RULE 1: ** one independent element will be treated as an `sf` row.  
+**RULE 2: ** if you want them into the same row, togother, `list()` them.
+
+**Arguments**   
+
+- **... **     two-numeric vectors or two-column matrix or list of them  
+- **colname**  one string, colname for simple feature column, default is geometry  
+- **rownames** rownames for each row  
+- **crs**      coordinate reference system: integer with the EPSG code, or character with proj4string
+
+#### 1.1.1 from vector: create one point
+
+If you want to create one point A(1,1), you can give **a two-numeric vector** to function `sf_point`.
+
+```{r,warning=FALSE}
+library(sf666)
+sf_point(c(1,1))
+```
+
+Else, you can give **a two-column matrix** with one row
+
+```{r}
+mt1=matrix(c(1,1),ncol=2)
+sf_point(mt1)
+```
+
+#### 1.1.2 from vector: create two points in different rows/sets 
+
+If you want to create points more than one, two options you need to consider, whether the points in set same set or not.
+
+Take two points as example. If you want to let the two points in different rows/sets, please let them independent. Else, `list()` them.
+
+```{r}
+sf_point(c(1,1), c(2,2))
+```
+
+We see, we create two different points in two rows. **The reaseon/RULE is that they are independent.**
+
+Now, let us use `list()` to put them together.
+
+```{r}
+sf_point(list(c(1,1), c(2,2)))
+```
+
+Now, we see the two points become **MULTIPOINT**, they are together. **The reaseon/RULE is that you  `list` them.**
+
+
+#### 1.1.3 from matrix: create one points set
+
+One matrix may be included many points. If you want to create one set points, you cant use `rbind` function to change matrix to be one. Or, you can list them
+
+```{r}
+mt2=matrix(c(1,2,4,5,6,7),ncol=2)
+mt3=matrix(c(7,9,8,9,7,4),ncol=2)
+sf_point(rbind(mt2,mt3))
+sf_point(list(mt2,mt3))
+```
+
+We see, the points are treated as one simple feature row. **The reason/RULE is that you `list` them.**
+
+#### 1.1.4 from matrix: create more than one points sets
+
+If you want to create one more points sets, please let them independent.
+
+```{r}
+sf_point(mt2,mt3)
+```
+
+We see, the points are treated as two simple feature rows. **The reason/RULE is that they are independent.**
+
+
+#### 1.1.5 from vector, matrix and list: mixed
+
+We can use vector, matrix and list together.
+
+```{r}
+sf_point(c(9,10), mt1, list(mt2,mt3), list(c(11,15), mt2))
+```
+
+#### 1.1.6 Conclusion
+
+In `sf_point`, it is free for you to create points. You can use **two-numeric vector**, **tow-column matrix**, or **list of them*. Because one point in two dimensions x and y axis needs two numbers for x and y coordinate.  
+
+**Two RULEs** must be in mind. It is pretty pretty important. They are the core thought though out the whole creation function in sf666 package: `independence to different rows` and `list to the same row`.
+
+
+
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
